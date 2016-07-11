@@ -1,0 +1,8 @@
+{
+  "name": "playground-chat-electron",
+  "version": "0.1.0",
+  "main": "app.js",
+  "devDependencies": {
+    "electron-prebuilt": "^1.2.6"
+  }
+}

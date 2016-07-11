@@ -1,0 +1,21 @@
+{
+  "name": "playground-chat",
+  "homepage": "https://github.com/Alanaktion/playground",
+  "authors": [
+    "Alan Hardman <alan@phpizza.com>"
+  ],
+  "description": "",
+  "main": "",
+  "license": "MIT",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "randomcolor": "^0.4.4"
+  }
+}
