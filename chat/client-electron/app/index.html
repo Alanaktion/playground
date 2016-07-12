@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Chat</title>
+	<link rel="stylesheet" type="text/css" href="index.css">
+</head>
+<body>
+	<form id="frm-connect" class="window">
+		<div class="window-message">Connecting&hellip;</div>
+		<input type="text" class="window-input" name="nick" hidden>
+		<button type="button" class="btn-connect" hidden>Connect</button>
+		<button type="submit" class="btn-join" hidden>Join</button>
+	</form>
+	<div class="overlay"></div>
+	<div class="message-container">
+		<ul class="messages"></ul>
+	</div>
+	<form id="frm-message" class="form-container">
+		<input type="text" class="input-message" name="message" autocomplete="off" disabled>
+		<button type="submit" class="btn-send" hidden>Send</button>
+	</form>
+	<script type="text/javascript" src="../bower_components/randomcolor/randomColor.js"></script>
+	<script src="index.js"></script>
+</body>
+</html>

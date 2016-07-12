@@ -1,0 +1,127 @@
+html, body {
+	margin: 0;
+	padding: 0;
+	height: 100%;
+}
+body {
+	font-family: sans-serif;
+	font-size: 14px;
+	overflow: hidden;
+}
+/*[hidden] {
+	display: none;
+	visibility: hidden;
+}*/
+
+/* Elements */
+input {
+	box-sizing: border-box;
+	font-size: 14px;
+	height: 32px;
+	padding: 4px 8px;
+	border: 1px solid #ddd;
+	border-radius: 2px;
+}
+input:focus {
+	outline: none;
+	border-color: #66afe9;
+	box-shadow: 0 1px 0 rgba(0, 0, 0, 0.05) inset;
+}
+hr {
+	border: none;
+	height: 1px;
+	background-color: #e0e0e0;
+}
+
+/* Layout */
+.overlay {
+	position: absolute;
+	top: 0;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	z-index: 1;
+}
+.window {
+	position: absolute;
+	top: 15px;
+	left: 15px;
+	right: 15px;
+	padding: 15px;
+	z-index: 2;
+}
+.message-container {
+	box-sizing: border-box;
+	height: calc(100vh - 32px - 10px);
+	padding: 8px;
+	overflow-y: auto;
+}
+.form-container {
+	position: absolute;
+	display: block;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	height: 32px;
+	padding: 5px;
+}
+
+/* Window */
+.window {
+	background-color: #fff;
+	background-color: rgba(255, 255, 255, 0.5);
+	border-radius: 2px;
+}
+.window-input {
+	margin-top: 15px;
+	width: 100%;
+}
+button {
+	margin-top: 15px;
+}
+
+/* Overlay */
+.overlay {
+	background-color: rgba(0, 0, 0, 0.2);
+}
+.overlay:not([hidden]) ~ .message-container,
+.overlay:not([hidden]) ~ .form-container {
+	-webkit-filter: blur(5px);
+}
+
+/* Message Stream */
+.messages {
+	list-style: none;
+	padding-left: 0;
+	margin: 0;
+}
+.messages li {
+	margin-bottom: 1px;
+}
+.message .nick {
+	color: slategray;
+}
+.time {
+	font-size: 12px;
+	color: #777;
+	margin-top: 3px;
+}
+.notice {
+	color: darkgray;
+	font-style: italic;
+}
+.error {
+	color: darkred;
+	font-style: italic;
+}
+
+/* Message Form */
+.form-container:after {
+	content: '';
+	display: table;
+	clear: both;
+}
+.input-message {
+	float: left;
+	width: 100%;
+}

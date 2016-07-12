@@ -8,8 +8,10 @@ function createWindow () {
   // Create the browser window.
   mainWindow = new BrowserWindow({
     title: 'Chat',
-    width: 420,
-    height: 600,
+    width: 320,
+    height: 500,
+    minWidth: 200,
+    minHeight: 300,
     webPreferences: {
       defaultFontFamily: 'sansSerif',
       defaultEncoding: 'UTF-8'
@@ -17,12 +19,12 @@ function createWindow () {
   });
 
   // and load the index.html of the app.
-  mainWindow.loadURL('file://' + __dirname + '/app.html');
+  mainWindow.loadURL('file://' + __dirname + '/app/index.html');
 
   // Set up menu
-  mainWindow.setMenu(null);
+  /*mainWindow.setMenu(null);
   mainWindow.setAutoHideMenuBar(true);
-  mainWindow.setMenuBarVisibility(false);
+  mainWindow.setMenuBarVisibility(false);*/
 
   // Emitted when the window is closed.
   mainWindow.on('closed', function () {
