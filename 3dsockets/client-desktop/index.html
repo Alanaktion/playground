@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>3dsockets</title>
+	<style type="text/css">
+	html, body {
+		height: 100%;
+		padding: 0;
+	}
+	body {
+		perspective: 650px;
+	}
+	#obj {
+		position: absolute;
+		top: 50%;
+		left: 50%;
+		margin-top: -60px;
+		margin-left: -60px;
+		width: 120px;
+		height: 120px;
+		background-color: #222;
+		border-radius: 15px;
+	}
+	</style>
+</head>
+<body>
+<!-- This file will listen for motion data from the websocket server -->
+<code id="hax"></code>
+<div id="obj"></div>
+<script>
+window.socky = {
+	_socket: null,
+	connect: function() {
+		this._socket = new WebSocket('ws://' + location.host + ':8080');
+		this._socket.addEventListener('error', this.open);
+		this._socket.addEventListener('open', this.open);
+		this._socket.addEventListener('close', this.close);
+		this._socket.addEventListener('message', this.message);
+	},
+	error: function() {
+		alert('Unable to connect to socket.');
+	},
+	open: function() {
+		// Connected!
+	},
+	close: function() {
+		alert('Disconnected.');
+	},
+	message: function(obj) {
+		document.getElementById('hax').textContent = obj.data;
+		var pos = JSON.parse(obj.data);
+		document.getElementById('obj').style.transform = 'rotate3d('+(pos.x)+','+(pos.y)+','+(pos.z)+',90deg)';
+	}
+};
+
+// Initialize client client
+document.addEventListener('DOMContentLoaded', function() {
+	socky.connect();
+});
+</script>
+</body>
+</html>

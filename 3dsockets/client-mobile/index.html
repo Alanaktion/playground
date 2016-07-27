@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>3dsockets</title>
+</head>
+<body>
+<!-- This file will send the orientation data to the websocket server -->
+<code id="hax"></code>
+<script>
+window.socky = {
+	_socket: null,
+	connect: function() {
+		this._socket = new WebSocket('ws://' + location.host + ':8080');
+		this._socket.addEventListener('error', this.open);
+		this._socket.addEventListener('open', this.open);
+		this._socket.addEventListener('close', this.close);
+	},
+	error: function() {
+		alert('Unable to connect to socket.');
+	},
+	open: function() {
+		window.addEventListener('deviceorientation', handlery.orientation);
+	},
+	close: function() {
+		window.removeEventListener('deviceorientation', handlery.orientation);
+		alert('Disconnected.');
+	},
+	send: function(data) {
+		this._socket.send(data);
+	}
+};
+
+window.handlery = {
+	motion: function(e) {
+		var obj = JSON.stringify(e.acceleration);
+		document.getElementById('hax').textContent = obj;
+		throttle(function() {
+			socky.send(obj);
+		}, 33);
+	},
+	orientation: function(e) {
+		var obj = JSON.stringify({
+			x: e.beta / 180,
+			y: e.gamma / 90,
+			z: e.alpha / 360
+		});
+		document.getElementById('hax').textContent = obj;
+		throttle(function() {
+			socky.send(obj);
+		}, 33);
+	}
+};
+
+var lastSend;
+function throttle(fn, rate) {
+	if(!rate)
+		rate = 250;
+	var now = +new Date();
+	if (!lastSend || now > lastSend + rate) {
+		lastSend = now;
+		fn();
+	}
+}
+
+// Initialize client client
+document.addEventListener('DOMContentLoaded', function() {
+	if(!('DeviceOrientationEvent' in window)) {
+		alert('This device is not supported :(');
+		return;
+	}
+	socky.connect();
+});
+</script>
+</body>
+</html>
