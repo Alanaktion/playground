@@ -19,7 +19,7 @@ window.socky = {
 		alert('Unable to connect to socket.');
 	},
 	open: function() {
-		window.addEventListener('deviceorientation', handlery.orientation);
+		window.addEventListener('deviceorientation', handlery.orientation, false);
 	},
 	close: function() {
 		window.removeEventListener('deviceorientation', handlery.orientation);
@@ -32,7 +32,7 @@ window.socky = {
 
 window.handlery = {
 	motion: function(e) {
-		var obj = JSON.stringify(e.acceleration);
+		var obj = JSON.stringify(e);
 		document.getElementById('hax').textContent = obj;
 		throttle(function() {
 			socky.send(obj);
@@ -40,9 +40,12 @@ window.handlery = {
 	},
 	orientation: function(e) {
 		var obj = JSON.stringify({
-			x: e.beta / 180,
-			y: e.gamma / 90,
-			z: e.alpha / 360
+			a: e.alpha, // dir
+			b: e.beta,  // fb
+			c: e.gamma, // lr
+			// x: e.beta / 180,
+			// y: e.gamma / 90,
+			// z: e.alpha / 360
 		});
 		document.getElementById('hax').textContent = obj;
 		throttle(function() {

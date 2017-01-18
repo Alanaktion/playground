@@ -10,6 +10,8 @@
 	body {
 		perspective: 650px;
 	}
+
+	/* 3D object */
 	#obj {
 		position: absolute;
 		top: 50%;
@@ -21,13 +23,68 @@
 		background-color: #222;
 		border-radius: 15px;
 	}
+
+	/* Bar display */
+	.bar-container {
+		position: absolute;
+		top: 50vh;
+		right: 30px;
+	}
+	.bar {
+		position: absolute;
+		bottom: 0;
+		right: 0;
+		width: 15px;
+	}
+	.bar-container:nth-child(2) .bar {
+		bottom: auto;
+		top: 0;
+	}
+	.bar:nth-child(1) {
+		background-color: red;
+	}
+	.bar:nth-child(2) {
+		background-color: green;
+		right: 20px;
+	}
+	.bar:nth-child(3) {
+		background-color: blue;
+		right: 40px;
+	}
 	</style>
 </head>
 <body>
 <!-- This file will listen for motion data from the websocket server -->
-<code id="hax"></code>
+
+<!-- Debugging views -->
+<code id="last"></code><br>
+<code id="limits"></code>
+<div>
+	<div class="bar-container">
+		<div class="bar"></div>
+		<div class="bar"></div>
+		<div class="bar"></div>
+	</div>
+	<div class="bar-container">
+		<div class="bar"></div>
+		<div class="bar"></div>
+		<div class="bar"></div>
+	</div>
+</div>
+
+<!-- 3d object -->
 <div id="obj"></div>
+
 <script>
+window.posDebug = {
+	maxAlpha: 0,
+	maxBeta: 0,
+	maxGamma: 0,
+	minAlpha: 0,
+	minBeta: 0,
+	minGamma: 0
+}
+
 window.socky = {
 	_socket: null,
 	connect: function() {
@@ -47,9 +104,26 @@ window.socky = {
 		alert('Disconnected.');
 	},
 	message: function(obj) {
-		document.getElementById('hax').textContent = obj.data;
+		document.getElementById('last').textContent = obj.data;
 		var pos = JSON.parse(obj.data);
-		document.getElementById('obj').style.transform = 'rotate3d('+(pos.x)+','+(pos.y)+','+(pos.z)+',90deg)';
+
+		if (posDebug.maxAlpha < pos.a) posDebug.maxAlpha = pos.a;
+		if (posDebug.maxBeta < pos.b) posDebug.maxBeta = pos.b;
+		if (posDebug.maxGamma < pos.c) posDebug.maxGamma = pos.c;
+		if (posDebug.minAlpha > pos.a) posDebug.minAlpha = pos.a;
+		if (posDebug.minBeta > pos.b) posDebug.minBeta = pos.b;
+		if (posDebug.minGamma > pos.c) posDebug.minGamma = pos.c;
+		document.getElementById('limits').textContent = JSON.stringify(posDebug);
+
+		// @todo: correct angles
+		document.getElementById('obj').style.transform = 'rotate3d(0, 1, 0, '+(-pos.a)+'deg) rotate3d(1, 0, 0, '+(-pos.b)+'deg) rotate3d(0, 0, 1, '+(-pos.c)+'deg)';
+
+		document.querySelector('.bar-container:nth-child(1) .bar:nth-child(1)').style.height = pos.a + 'px';
+		document.querySelector('.bar-container:nth-child(1) .bar:nth-child(2)').style.height = pos.b + 'px';
+		document.querySelector('.bar-container:nth-child(1) .bar:nth-child(3)').style.height = pos.c + 'px';
+		document.querySelector('.bar-container:nth-child(2) .bar:nth-child(1)').style.height = (-pos.a) + 'px';
+		document.querySelector('.bar-container:nth-child(2) .bar:nth-child(2)').style.height = (-pos.b) + 'px';
+		document.querySelector('.bar-container:nth-child(2) .bar:nth-child(3)').style.height = (-pos.c) + 'px';
 	}
 };
 
