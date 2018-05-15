@@ -9,6 +9,14 @@ import (
 	"strings"
 )
 
+const (
+	itemTypeText   = '0'
+	itemTypeMenu   = '1'
+	itemTypeError  = '3'
+	itemTypeBinary = '9'
+	itemTypeImage  = 'i'
+)
+
 var root string
 var host string
 var port int
@@ -62,29 +70,27 @@ func handleConnection(conn net.Conn) {
 }
 
 // Handles client messages.
+// This should do its best to follow RFC 1436
 func handleMessage(conn net.Conn, message string) {
 	message = strings.TrimRight(message, "\r\n")
 	if message == "" || message == "/" {
 		// 1 Index menu
 		conn.Write([]byte("iJekyll Blog\r\n"))
-		writeMenuItem(conn, 1, "Posts", "/posts")
-		writeMenuItem(conn, 0, "About the server", "/server")
+		writeMenuItem(conn, itemTypeMenu, "Posts", "/posts")
+		conn.Write([]byte("."))
 	} else if message == "/posts" {
 		// 1 Post menu
 		// TODO: read _posts directory and populate menu
-		writeMenuItem(conn, 0, "Example Post", "/posts/example-post")
-	} else if message == "/server" {
-		// 0 About
-		conn.Write([]byte("About this server\r\n"))
-		conn.Write([]byte("This will be implemeted later.\r\n"))
+		writeMenuItem(conn, itemTypeText, "Example Post", "/posts/example-post")
+		conn.Write([]byte("."))
 	} else {
-		println("Bad request:" + message)
+		println("Bad request: " + message)
 	}
 	conn.Close()
 }
 
 // Write an item to an index.
-func writeMenuItem(conn net.Conn, itemType int, display string, selector string) {
-	s := fmt.Sprintf("%d%s\t%s\t%s\t%d\r\n", itemType, display, selector, host, port)
+func writeMenuItem(conn net.Conn, itemType byte, display string, selector string) {
+	s := fmt.Sprintf("%s%s\t%s\t%s\t%d\r\n", string(itemType), display, selector, host, port)
 	conn.Write([]byte(s))
 }
